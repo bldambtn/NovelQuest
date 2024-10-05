@@ -14,9 +14,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.2"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.8",
     "dotenv": "^16.4.5"
   }
 }
