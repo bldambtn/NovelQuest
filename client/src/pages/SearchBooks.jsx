@@ -9,6 +9,7 @@ const SearchBooks = () => {
   const [searchedBooks, setSearchedBooks] = useState([]);
   const [saveBook] = useMutation(SAVE_BOOK);
 
+  // Function to handle saving a book
   const handleSaveBook = async (bookData) => {
     try {
       await saveBook({
@@ -26,8 +27,35 @@ const SearchBooks = () => {
     }
   };
 
+  // Function to handle form submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
+    if (!searchInput.trim()) {
+      return; // Don't proceed if the input is empty
+    }
+
+    try {
+      // Use an API call to search for books (example with Google Books API)
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${searchInput}`
+      );
+      const { items } = await response.json();
+
+      // Map the response to match your state structure
+      const bookData = items.map((book) => ({
+        bookId: book.id,
+        title: book.volumeInfo.title,
+        authors: book.volumeInfo.authors || ["No authors listed"],
+        description: book.volumeInfo.description || "No description available",
+        image: book.volumeInfo.imageLinks?.thumbnail || "",
+        link: book.volumeInfo.infoLink || "",
+      }));
+
+      setSearchedBooks(bookData); // Update state with the search results
+    } catch (err) {
+      console.error("Error fetching books:", err);
+    }
   };
 
   return (
@@ -76,21 +104,14 @@ const SearchBooks = () => {
                 )}
                 <Card.Body>
                   <Card.Title>{book.title}</Card.Title>
-                  <p className="small">Authors: {book.authors}</p>
+                  <p className="small">Authors: {book.authors.join(", ")}</p>
                   <Card.Text>{book.description}</Card.Text>
                   {Auth.loggedIn() && (
                     <Button
-                      disabled={savedBookIds?.some(
-                        (savedBookId) => savedBookId === book.bookId
-                      )}
                       className="btn-block btn-info"
                       onClick={() => handleSaveBook(book)}
                     >
-                      {savedBookIds?.some(
-                        (savedBookId) => savedBookId === book.bookId
-                      )
-                        ? "This book has already been saved!"
-                        : "Save this Book!"}
+                      Save this Book!
                     </Button>
                   )}
                 </Card.Body>
