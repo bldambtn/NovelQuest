@@ -7,7 +7,6 @@ const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        // Find the user by ID and return their data
         return await User.findById(context.user._id).select("-__v -password");
       }
       throw new AuthenticationError("You need to be logged in!");
@@ -44,7 +43,6 @@ const resolvers = {
               savedBooks: { bookId, title, authors, description, image, link },
             },
           },
-          // Return the updated user
           { new: true }
         );
         return updatedUser;
@@ -55,10 +53,7 @@ const resolvers = {
       if (context.user) {
         const updatedUser = await User.findByIdAndUpdate(
           context.user._id,
-          {
-            $pull: { savedBooks: { bookId } },
-          },
-          // Return the updated user
+          { $pull: { savedBooks: { bookId } } },
           { new: true }
         );
         return updatedUser;
