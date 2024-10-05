@@ -6,41 +6,41 @@ class AuthService {
   // Retrieve user data from the token
   getProfile() {
     const token = this.getToken();
-    return token ? decode(token) : null; 
+    return token ? decode(token) : null;
   }
 
-  // Check if the user is logged 
+  // Check if the user is logged
   loggedIn() {
     const token = this.getToken();
-    return !!token && !this.isTokenExpired(token); 
+    return !!token && !this.isTokenExpired(token);
   }
 
   // Check if the token is expired
   isTokenExpired(token) {
     try {
-      const decoded = decode(token); 
+      const decoded = decode(token);
       return decoded.exp < Date.now() / 1000;
     } catch (err) {
       console.error("Error decoding token:", err);
-      return false; 
+      return false;
     }
   }
 
   // Retrieve token from localStorage
   getToken() {
-    return localStorage.getItem("id_token"); 
+    return localStorage.getItem("id_token");
   }
 
-  // Log in 
+  // Log in
   login(idToken) {
-    localStorage.setItem("id_token", idToken); 
-    window.location.assign("/dashboard"); 
+    localStorage.setItem("id_token", idToken);
+    window.location.assign("/"); 
   }
 
-  // Log out 
+  // Log out
   logout() {
-    localStorage.removeItem("id_token"); 
-    window.location.assign("/"); 
+    localStorage.removeItem("id_token");
+    window.location.assign("/");
   }
 }
 
