@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 // set token secret and expiration date
-const secret = process.env.JWT_SECRET || "myfallbacksecret"; // Uses .env JWT_SECRET or a fallback
+const secret = process.env.JWT_SECRET || "myfallbacksecret";
 const expiration = "2h";
 
 module.exports = {
