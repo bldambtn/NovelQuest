@@ -1,10 +1,8 @@
-require("dotenv").config();
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
 const { typeDefs, resolvers } = require("./schemas");
 const { authMiddleware } = require("./utils/auth");
 const db = require("./config/connection");
-const path = require("path"); // Add this line to import the path module
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,24 +14,29 @@ async function startApolloServer() {
     context: authMiddleware,
   });
 
-  // Start Apollo Server
   await server.start();
-
-  // Apply Apollo middleware to the Express app
   server.applyMiddleware({ app });
 
-  // Serve static assets in production
+  // Set security headers to manage CSP
+  app.use((req, res, next) => {
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'self'; script-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';"
+    );
+    return next();
+  });
+
   if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "../client/build")));
   }
 
-  // Start server
   db.once("open", () => {
     app.listen(PORT, () => {
-      console.log(`🌍 Now listening on localhost:${PORT}${server.graphqlPath}`);
+      console.log(
+        `🌍 Now listening on http://localhost:${PORT}${server.graphqlPath}`
+      );
     });
   });
 }
 
-// Call the async function to start the server
 startApolloServer();
