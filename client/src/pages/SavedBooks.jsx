@@ -54,6 +54,12 @@ const SavedBooks = () => {
                   <Card.Title>{book.title}</Card.Title>
                   <p className="small">Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
+                  {/* The link to Google Books */}
+                  <div>
+                    <Card.Link href={book.link} target="_blank">
+                      View on Google Books
+                    </Card.Link>
+                  </div>
                   <Button
                     className="btn-block btn-danger"
                     onClick={() => handleDeleteBook(book.bookId)}

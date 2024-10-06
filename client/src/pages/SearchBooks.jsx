@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { SAVE_BOOK } from "../utils/mutations";
 import { Container, Form, Row, Col, Button, Card } from "react-bootstrap";
 import Auth from "../utils/auth";
+import { getSavedBookIds, saveBookIds } from "../utils/localStorage";
 
 const SearchBooks = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchedBooks, setSearchedBooks] = useState([]);
+  const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds()); // Load saved books from localStorage
   const [saveBook] = useMutation(SAVE_BOOK);
+
+  useEffect(() => {
+    saveBookIds(savedBookIds); // Save updated book IDs to localStorage
+  }, [savedBookIds]);
 
   // Function to handle saving a book
   const handleSaveBook = async (bookData) => {
     try {
-      await saveBook({
+      const { data } = await saveBook({
         variables: {
           bookId: bookData.bookId,
           title: bookData.title,
@@ -22,6 +28,9 @@ const SearchBooks = () => {
           link: bookData.link,
         },
       });
+
+      // If successful, add the bookId to the savedBookIds state
+      setSavedBookIds([...savedBookIds, bookData.bookId]);
     } catch (err) {
       console.error(err);
     }
@@ -36,7 +45,6 @@ const SearchBooks = () => {
     }
 
     try {
-      // Use an API call to search for books (example with Google Books API)
       const response = await fetch(
         `https://www.googleapis.com/books/v1/volumes?q=${searchInput}`
       );
@@ -106,12 +114,23 @@ const SearchBooks = () => {
                   <Card.Title>{book.title}</Card.Title>
                   <p className="small">Authors: {book.authors.join(", ")}</p>
                   <Card.Text>{book.description}</Card.Text>
+
+                  {/* The link to Google Books */}
+                  <div>
+                    <Card.Link href={book.link} target="_blank">
+                      View on Google Books
+                    </Card.Link>
+                  </div>
+                  
                   {Auth.loggedIn() && (
                     <Button
-                      className="btn-block btn-info"
+                      disabled={savedBookIds.includes(book.bookId)} // Disable if already saved
+                      className="btn-block btn-info mt-2"
                       onClick={() => handleSaveBook(book)}
                     >
-                      Save this Book!
+                      {savedBookIds.includes(book.bookId)
+                        ? "This book has already been saved!"
+                        : "Save this Book!"}
                     </Button>
                   )}
                 </Card.Body>
