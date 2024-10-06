@@ -13,7 +13,7 @@ import Auth from "./utils/auth";
 
 // Set up the HTTP link
 const httpLink = createHttpLink({
-  uri: "http://localhost:3001/graphql",
+  uri: "https://novelquest.onrender.com/graphql",
 });
 
 
