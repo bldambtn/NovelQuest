@@ -19,13 +19,13 @@ async function startApolloServer() {
   server.applyMiddleware({ app });
 
   // Set security headers for Content Security Policy (CSP)
-  // app.use((req, res, next) => {
-  //   res.setHeader(
-  //     "Content-Security-Policy",
-  //     "default-src 'self'; script-src 'self' https://novelquest.onrender.com https://static.cloudflareinsights.com; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
-  //   );
-  //   next();
-  // });
+  app.use((req, res, next) => {
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'self'; script-src 'self' https://novelquest.onrender.com https://static.cloudflareinsights.com; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
+    );
+    next();
+  });
 
   // Serve static assets in production
   if (process.env.NODE_ENV === "production") {
