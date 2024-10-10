@@ -62,6 +62,7 @@ const LoginForm = () => {
             onChange={handleInputChange}
             value={userFormData.email}
             required
+            autoComplete="username" // Update this attribute
           />
           <Form.Control.Feedback type="invalid">
             Email is required!
