@@ -9,7 +9,7 @@ const LoginForm = () => {
   const [validated, setValidated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const [loginUser] = useMutation(LOGIN_USER);
+  const [login, { error }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -23,7 +23,6 @@ const LoginForm = () => {
       event.preventDefault();
       event.stopPropagation();
     }
-    setValidated(true);
 
     try {
       const { data } = await loginUser({
@@ -34,6 +33,12 @@ const LoginForm = () => {
       console.error(err);
       setShowAlert(true);
     }
+
+    setUserFormData({
+      username: "",
+      email: "",
+      password: "",
+    });
   };
 
   return (
@@ -51,7 +56,7 @@ const LoginForm = () => {
         <Form.Group className="mb-3">
           <Form.Label htmlFor="email">Email</Form.Label>
           <Form.Control
-            type="email"
+            type="text"
             placeholder="Your email"
             name="email"
             onChange={handleInputChange}

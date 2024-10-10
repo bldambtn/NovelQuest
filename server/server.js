@@ -1,49 +1,47 @@
+require("dotenv").config();
 const express = require("express");
-const { ApolloServer } = require("apollo-server-express");
-const { typeDefs, resolvers } = require("./schemas");
+const { ApolloServer } = require("@apollo/server");
+const { expressMiddleware } = require("@apollo/server/express4");
+const path = require("path");
 const { authMiddleware } = require("./utils/auth");
+
+const { typeDefs, resolvers } = require("./schemas");
 const db = require("./config/connection");
-const path = require("path"); // You need to add this line
 
-const app = express();
 const PORT = process.env.PORT || 3001;
+const app = express();
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+});
 
-async function startApolloServer() {
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    context: authMiddleware,
-  });
-
+const startApolloServer = async () => {
   await server.start();
-  server.applyMiddleware({ app });
 
-  // Set security headers for Content Security Policy (CSP)
-  app.use((req, res, next) => {
-    res.setHeader(
-      "Content-Security-Policy",
-      "default-src 'self'; script-src 'self' https://novelquest.onrender.com https://static.cloudflareinsights.com; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
-    );
-    next();
-  });
+  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json());
 
-  // Serve static assets in production
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: authMiddleware,
+    })
+  );
+
   if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../client/build")));
+    app.use(express.static(path.join(__dirname, "../client/dist")));
 
-    // Fallback route for handling React routing in production
     app.get("*", (req, res) => {
-      res.sendFile(path.join(__dirname, "../client/build/index.html"));
+      res.sendFile(path.join(__dirname, "../client/dist/index.html"));
     });
   }
 
   db.once("open", () => {
     app.listen(PORT, () => {
-      console.log(
-        `🌍 Now listening on http://localhost:${PORT}${server.graphqlPath}`
-      );
+      console.log(`API server running on port ${PORT}!`);
+      console.log(`Use GraphQL at http://localhost:${PORT}/graphql`);
     });
   });
-}
+};
 
 startApolloServer();

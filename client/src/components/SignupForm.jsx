@@ -12,8 +12,7 @@ const SignupForm = () => {
   });
   const [validated, setValidated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-
-  const [addUser] = useMutation(ADD_USER);
+  const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -27,17 +26,22 @@ const SignupForm = () => {
       event.preventDefault();
       event.stopPropagation();
     }
-    setValidated(true);
 
     try {
       const { data } = await addUser({
         variables: { ...userFormData },
       });
-      Auth.login(data.addUser.token); 
+      Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
       setShowAlert(true);
     }
+
+    setUserFormData({
+      username: "",
+      email: "",
+      password: "",
+    });
   };
 
   return (
@@ -71,7 +75,7 @@ const SignupForm = () => {
           <Form.Label htmlFor="email">Email</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Your email"
+            placeholder="Your email address"
             name="email"
             onChange={handleInputChange}
             value={userFormData.email}
