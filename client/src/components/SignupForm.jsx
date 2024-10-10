@@ -12,8 +12,8 @@ const SignupForm = () => {
   });
   const [validated, setValidated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState(""); // Add this to manage alert message
-  const [addUser, { error }] = useMutation(ADD_USER);
+
+  const [addUser] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -27,6 +27,7 @@ const SignupForm = () => {
       event.preventDefault();
       event.stopPropagation();
     }
+    setValidated(true);
 
     try {
       const { data } = await addUser({
@@ -35,22 +36,8 @@ const SignupForm = () => {
       Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
-      if (err.message.includes("E11000 duplicate key error")) {
-        setShowAlert(true);
-        setAlertMessage(
-          "Username or email already exists. Please use a different one."
-        );
-      } else {
-        setShowAlert(true);
-        setAlertMessage("Something went wrong with your signup.");
-      }
+      setShowAlert(true);
     }
-
-    setUserFormData({
-      username: "",
-      email: "",
-      password: "",
-    });
   };
 
   return (
@@ -62,7 +49,7 @@ const SignupForm = () => {
           show={showAlert}
           variant="danger"
         >
-          {alertMessage} {/* Use the alertMessage state here */}
+          Something went wrong with your signup!
         </Alert>
 
         <Form.Group className="mb-3">
@@ -84,12 +71,11 @@ const SignupForm = () => {
           <Form.Label htmlFor="email">Email</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Your email address"
+            placeholder="Your email"
             name="email"
             onChange={handleInputChange}
             value={userFormData.email}
             required
-            autoComplete="username"
           />
           <Form.Control.Feedback type="invalid">
             Email is required!
@@ -105,7 +91,6 @@ const SignupForm = () => {
             onChange={handleInputChange}
             value={userFormData.password}
             required
-            autoComplete="new-password"
           />
           <Form.Control.Feedback type="invalid">
             Password is required!
