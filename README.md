@@ -5,7 +5,7 @@
 - [User Story and Acceptance Criteria](#user-story-and-acceptance-criteria)
   - [User Story](#user-story)
   - [Acceptance Criteria](#acceptance-criteria)
-- [Walkthrough Video](#Walkthrough-Video)
+- [Walkthrough](#Walkthrough)
 - [Citations](#citations)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
