@@ -12,6 +12,7 @@ const SignupForm = () => {
   });
   const [validated, setValidated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(""); // Add this to manage alert message
   const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
@@ -34,7 +35,15 @@ const SignupForm = () => {
       Auth.login(data.addUser.token);
     } catch (err) {
       console.error(err);
-      setShowAlert(true);
+      if (err.message.includes("E11000 duplicate key error")) {
+        setShowAlert(true);
+        setAlertMessage(
+          "Username or email already exists. Please use a different one."
+        );
+      } else {
+        setShowAlert(true);
+        setAlertMessage("Something went wrong with your signup.");
+      }
     }
 
     setUserFormData({
@@ -53,7 +62,7 @@ const SignupForm = () => {
           show={showAlert}
           variant="danger"
         >
-          Something went wrong with your signup!
+          {alertMessage} {/* Use the alertMessage state here */}
         </Alert>
 
         <Form.Group className="mb-3">
@@ -80,6 +89,7 @@ const SignupForm = () => {
             onChange={handleInputChange}
             value={userFormData.email}
             required
+            autoComplete="username"
           />
           <Form.Control.Feedback type="invalid">
             Email is required!
@@ -95,7 +105,7 @@ const SignupForm = () => {
             onChange={handleInputChange}
             value={userFormData.password}
             required
-            autoComplete="new-password" // Add this line
+            autoComplete="new-password"
           />
           <Form.Control.Feedback type="invalid">
             Password is required!
