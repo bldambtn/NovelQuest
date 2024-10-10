@@ -1,17 +1,7 @@
 const mongoose = require("mongoose");
-require("dotenv").config();
 
-const uri = process.env.MONGODB_URI;
-
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-const connection = mongoose.connection;
-
-connection.once("open", () => {
-  console.log("Connected to MongoDB Atlas!");
-});
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/googlebooks"
+);
 
 module.exports = connection;

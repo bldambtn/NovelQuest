@@ -1,64 +1,68 @@
-// Imports
-const { AuthenticationError } = require("apollo-server-express"); 
-const User = require("../models/User"); 
-const { signToken } = require("../utils/auth"); 
+const { User } = require("../models");
+const { signToken, AuthenticationError } = require("../utils/auth");
 
 const resolvers = {
   Query: {
     me: async (parent, args, context) => {
       if (context.user) {
-        return await User.findById(context.user._id).select("-__v -password");
+        const user = await User.findOne({ _id: context.user._id });
+        return user;
       }
-      throw new AuthenticationError("You need to be logged in!");
+      throw AuthenticationError;
     },
   },
+
   Mutation: {
-    addUser: async (parent, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
-      const token = signToken(user);
-      return { token, user };
-    },
-    loginUser: async (parent, { email, password }) => {
+    login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
+
       if (!user) {
-        throw new AuthenticationError("No user found with this email address");
+        throw AuthenticationError;
       }
-      const correctPw = await user.isCorrectPassword(password);
-      if (!correctPw) {
-        throw new AuthenticationError("Incorrect password");
+
+      const isPwCorrect = await user.isCorrectPassword(password);
+
+      if (!isPwCorrect) {
+        throw AuthenticationError;
       }
+
       const token = signToken(user);
       return { token, user };
     },
-    saveBook: async (
-      parent,
-      { bookId, title, authors, description, image, link },
-      context
-    ) => {
-      if (context.user) {
-        const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          {
-            $addToSet: {
-              savedBooks: { bookId, title, authors, description, image, link },
-            },
-          },
-          { new: true }
-        );
-        return updatedUser;
-      }
-      throw new AuthenticationError("You need to be logged in!");
+
+    addUser: async (parent, { username, email, password }) => {
+      const user = await User.create({
+        username: username,
+        email: email,
+        password: password,
+      });
+
+      const token = signToken(user);
+      return { token, user };
     },
-    removeBook: async (parent, { bookId }, context) => {
+
+    saveBook: async (parent, { bookInput }, context) => {
       if (context.user) {
-        const updatedUser = await User.findByIdAndUpdate(
-          context.user._id,
-          { $pull: { savedBooks: { bookId } } },
+        const user = await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $push: { savedBooks: bookInput } },
           { new: true }
         );
-        return updatedUser;
+        return user;
       }
-      throw new AuthenticationError("You need to be logged in!");
+      throw AuthenticationError;
+    },
+
+    removeBook: async (parent, args, context) => {
+      if (context.user) {
+        const user = await User.findByIdAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks: args } },
+          { new: true }
+        );
+        return user;
+      }
+      throw AuthenticationError;
     },
   },
 };
