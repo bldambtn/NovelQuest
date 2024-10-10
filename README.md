@@ -7,6 +7,7 @@
   - [Acceptance Criteria](#acceptance-criteria)
 - [Walkthrough Video](#Walkthrough-Video)
 - [Citations](#citations)
+- [Acknowledgments](#acknowledgments)
 - [License](#license)
 
 ## Description
@@ -55,10 +56,21 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 ```
 ## Walkthrough
 
+Deployed application: https://novelquest.onrender.com
+
+Application repository: https://github.com/bldambtn/NovelQuest
+
+![gif of walkthrough for NovelQuest application](../NovelQuest/client/assets/novelquest.gif)
 
 ## Citations
 
 *   Source code: University of Texas at Austin. (2024). MERN challenge [Git repository]. GitLab. https://git.bootcampcontent.com/University-of-Texas-at-Austin/UTA-VIRT-FSF-PT-05-2024-U-LOLC/-/tree/main/21-MERN/02-Challenge?ref_type=heads 
+
+## Acknowledgments
+
+I would like to acknowledge the assistance provided by Xpert, an AI Learning Assistant from EdX, for guidance on various aspects of full stack application development, including debugging, API configuration, and setting up MongoDB Atlas.
+
+Additionally, I would like to thank my classmate Daneil Revello (https://github.com/Lixiviate) for their invaluable assistance with setting up the Google Books API and help with Render. Their support and insights greatly contributed to the success of this project.
 
 ## License
 MIT License
