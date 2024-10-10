@@ -60,7 +60,7 @@ Deployed application: https://novelquest.onrender.com
 
 Application repository: https://github.com/bldambtn/NovelQuest
 
-![gif of walkthrough for NovelQuest application](../NovelQuest/client/assets/novelquest.gif)
+![gif of walkthrough for NovelQuest application](./client/assets/novelquest.gif)
 
 ## Citations
 
