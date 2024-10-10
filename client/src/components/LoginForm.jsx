@@ -24,18 +24,29 @@ const LoginForm = () => {
       event.preventDefault();
       event.stopPropagation();
     }
-    setValidated(true);
 
     try {
+      // Use loginUser here
       const { data } = await loginUser({
         variables: { ...userFormData },
       });
-      Auth.login(data.loginUser.token);
-      setUserFormData({ email: "", password: "" });
+
+      // Ensure data and loginUser exist
+      if (data && data.loginUser && data.loginUser.token) {
+        Auth.login(data.loginUser.token);
+      } else {
+        console.error("Login response does not contain token:", data);
+        setShowAlert(true);
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Login error:", err);
       setShowAlert(true);
     }
+
+    setUserFormData({
+      email: "",
+      password: "",
+    });
   };
 
   return (
