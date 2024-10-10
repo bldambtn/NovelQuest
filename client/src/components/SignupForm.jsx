@@ -95,6 +95,7 @@ const SignupForm = () => {
             onChange={handleInputChange}
             value={userFormData.password}
             required
+            autoComplete="new-password" // Add this line
           />
           <Form.Control.Feedback type="invalid">
             Password is required!

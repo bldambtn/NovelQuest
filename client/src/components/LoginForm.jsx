@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { LOGIN_USER } from "../utils/mutations";
+import { LOGIN_USER } from "../utils/mutations"; // Ensure this is imported
 import Auth from "../utils/auth";
 import { Form, Button, Alert } from "react-bootstrap";
 
@@ -9,7 +9,8 @@ const LoginForm = () => {
   const [validated, setValidated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
 
-  const [login, { error }] = useMutation(LOGIN_USER);
+  // Ensure loginUser is used here
+  const [loginUser, { error }] = useMutation(LOGIN_USER);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -35,7 +36,6 @@ const LoginForm = () => {
     }
 
     setUserFormData({
-      username: "",
       email: "",
       password: "",
     });
@@ -77,6 +77,7 @@ const LoginForm = () => {
             onChange={handleInputChange}
             value={userFormData.password}
             required
+            autoComplete="current-password"
           />
           <Form.Control.Feedback type="invalid">
             Password is required!
