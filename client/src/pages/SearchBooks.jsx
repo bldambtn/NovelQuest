@@ -64,14 +64,13 @@ const SearchBooks = () => {
         variables: { bookInput: { ...bookToSave } },
       });
 
-      if (error) {
-        throw new Error("something went wrong!");
+      if (data && data.saveBook) {
+        setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      } else {
+        throw new Error("Something went wrong with saving the book!");
       }
-
-      // If book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.error("Error fetching books:", err);
+      console.error("Error saving book:", err);
     }
   };
 

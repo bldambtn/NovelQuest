@@ -1,9 +1,8 @@
-// make a search to google books api
-// https://www.googleapis.com/books/v1/volumes?q=harry+potter
 export const searchGoogleBooks = (query) => {
+  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+  console.log("Google API Key:", apiKey);
+
   return fetch(
-    `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${
-      import.meta.env.googleAPIKey
-    }`
+    `https://www.googleapis.com/books/v1/volumes?q=${query}&key=${apiKey}`
   );
 };
