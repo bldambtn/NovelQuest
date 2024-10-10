@@ -55,12 +55,13 @@ const SignupForm = () => {
         <Form.Group className="mb-3">
           <Form.Label htmlFor="username">Username</Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Your username"
-            name="username"
+            type="password"
+            placeholder="Your password"
+            name="password"
             onChange={handleInputChange}
-            value={userFormData.username}
+            value={userFormData.password}
             required
+            autoComplete="new-password"
           />
           <Form.Control.Feedback type="invalid">
             Username is required!
