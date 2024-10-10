@@ -34,6 +34,7 @@ const SignupForm = () => {
         variables: { ...userFormData },
       });
       Auth.login(data.addUser.token);
+      setUserFormData({ username: "", email: "", password: "" }); // Reset form data
     } catch (err) {
       console.error(err);
       setShowAlert(true);
@@ -55,12 +56,13 @@ const SignupForm = () => {
         <Form.Group className="mb-3">
           <Form.Label htmlFor="username">Username</Form.Label>
           <Form.Control
-            type="password"
-            placeholder="Your password"
-            name="password"
+            type="text"
+            placeholder="Your username"
+            name="username"
             onChange={handleInputChange}
-            value={userFormData.password}
+            value={userFormData.username}
             required
+            autoComplete="off" // Set autocomplete to "off"
           />
           <Form.Control.Feedback type="invalid">
             Username is required!
@@ -76,6 +78,7 @@ const SignupForm = () => {
             onChange={handleInputChange}
             value={userFormData.email}
             required
+            autoComplete="email" // Add this line
           />
           <Form.Control.Feedback type="invalid">
             Email is required!
@@ -91,6 +94,7 @@ const SignupForm = () => {
             onChange={handleInputChange}
             value={userFormData.password}
             required
+            autoComplete="off" // Set autocomplete to "off"
           />
           <Form.Control.Feedback type="invalid">
             Password is required!
